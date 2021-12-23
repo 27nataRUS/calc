@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Этот кредитный калькулятор позволяет онлайн производить приблизительный расчет платежей по кредиту при ипотеке онлайн, и сравнивать, какие платежи выгоднее для заемщика.">
+    <meta name="keywords" content="кредитный калькулятор ипотека, онлайн, калькуляторы банков">
+    <title>Ипотечный калькулятор</title>
+	
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/css/ion.rangeSlider.min.css"/>
+    <link rel="stylesheet" href="/css/main.css">
+
+</head>
+ <body>	
+ 
+<div class="container py-5">
+  <form>
+ <div class="row">
+   <div class="col-md-7 align-self-md-center">
+       <div class="form-group row">
+          <label for="price" class="col-sm-5 col-md-3 col-form-label">Стоимость</label>
+         <div class="col-sm-7 col-md-9 input-group input-group-prepend rouble">
+			 <input class="form-control" id="mortgage-sum" type="text" value="1 000 000" maxlength="11" autocomplete="off" onchange="mortgageSumChanged();" onkeyup="formatInputWithSpaces(this); mortgageSumChanged();">
+               <div class="input-group-text">₽</div>
+			 </div>
+       </div>
+	   
+	   
+	   
+       <div class="form-group row  pt-3">
+          <label for="years" class="col-sm-5 col-md-3 col-form-label">Срок кредита</label>
+         <div class="col-sm-7 col-md-9">		   
+		   <input type="range" class="js-range-slider" id="mortgage-term" autocomplete="off" onchange="mortgageTermChanged();" value="" tabindex="-1" readonly>
+         </div>
+       </div>
+
+	   
+       <div class="form-group row">
+          <label for="time" class="col-sm-5 col-md-3 col-form-label">Первый взнос</label>
+         <div class="col-sm-5 col-md-9 input-group input-group-prepend rouble">
+          <input class="form-control rouble" id="mortgage-downpayment-value" type="text" value="" maxlength="10" autocomplete="off" onchange="mortgageDownpaymentValueChanged();" onkeyup="formatInputWithSpaces(this); mortgageDownpaymentValueChanged();"  placeholder="Не менее 15% от стоимости">
+               <div class="input-group-text">₽</div>
+         </div>
+		
+         <div class="col-sm-2">
+          <input class="form-control d-none" id="mortgage-downpayment-percent" type="text" value="15" maxlength="2" autocomplete="off" onchange="mortgageDownpaymentPercentChanged();" onkeyup="formatInputWithSpaces(this); mortgageDownpaymentPercentChanged();">
+         </div>
+		 
+		    <div class="col-12 text-right"><small  class="form-text text-muted">Первоначальный взнос не может быть менее 15% от стоимости</small>
+			</div>
+		 
+       </div>	   
+	   
+   </div>
+   
+   <div class="col-md-5">
+   
+       <div class="form-group row">
+         <div class="col-12 interest">
+           <input class="" id="mortgage-interest" type="text" value="9.5" autocomplete="off" onchange="mortgageInterestChanged();" onkeyup="formatInputWithSpaces(this); mortgageInterestChanged();"><span class="">%</span>
+		    <p class="form-text">Ставка основана на усреднённом значении кредитных предложений от популярных российских банков.</p>
+		  </div>
+		</div>
+		<div class="col-12 amount"><span id="mortgage-result-value">200 200</span> ₽</div>
+		  <p class="form-text">При указании диапазона цен за основу расчёта принимается максимальное значение.</p>
+   </div>
+ 
+   </div>
+  </form>
+</div>
+
+
+
+
+	
+	
+
+	
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+		
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.0/js/ion.rangeSlider.min.js"></script>
+
+<script>
+$(".js-range-slider").ionRangeSlider({
+		grid: true,
+        min: 0,
+        max: 30,
+        from: 20,
+        step: 1,
+		//postfix: ' год',
+		//max_postfix: ' лет',
+		grid_num: 6,
+		//drag_interval: true,
+		//values: [
+        //    "1", "5", "10", "15", "20", "25", "30"
+        //]
+    });
+</script>	
+	
+	<script>
+
+		function formatWithSpaces(value) {
+			return value.toString().replace(/ /g, "").replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+		}
+		
+		function formatInputWithSpaces(input) {
+			input.value = formatWithSpaces(input.value);
+		}
+
+		function mortgageSumChanged() {
+			var sum = $("#mortgage-sum").val().replace(/ /g, "");
+			if (sum < 0) {
+				$("#mortgage-sum").val('0');
+				return;
+			}
+			var dpPercent = Math.max(0, Math.min(99, $("#mortgage-downpayment-percent").val()));
+			$("#mortgage-downpayment-value").val(formatWithSpaces(Math.round(sum * dpPercent / 100) || 0));
+			calculateMortgage();
+		}
+
+		function mortgageDownpaymentValueChanged() {
+			var sum = parseInt($("#mortgage-sum").val().replace(/ /g, "")) || 0;
+			var dpValue = parseInt($("#mortgage-downpayment-value").val().replace(/ /g, "")) || 0;
+			if (dpValue > sum) {
+				$("#mortgage-downpayment-value").val(sum);
+				dpValue = sum;
+			}
+			var dpPercent = Math.round(dpValue / sum * 100 * 10) / 10;
+			$("#mortgage-downpayment-percent").val(formatWithSpaces(dpPercent || 0));
+			calculateMortgage();
+		}
+
+		function mortgageDownpaymentPercentChanged() {
+			var sum = parseInt($("#mortgage-sum").val().replace(/ /g, ""));
+			var dpPercent = parseInt($("#mortgage-downpayment-percent").val().replace(/ /g, ""));
+			if (isNaN(dpPercent) || dpPercent < 0) {
+				$("#mortgage-downpayment-percent").val("1");
+				dpPercent = 1;
+			} else if (dpPercent > 100) {
+				$("#mortgage-downpayment-percent").val("100");
+				dpPercent = 100;
+			}
+			var dpValue = Math.round(sum * dpPercent / 100);
+			$("#mortgage-downpayment-value").val(formatWithSpaces(dpValue || 0));
+			calculateMortgage();
+		}
+
+		function mortgageInterestChanged() {
+			var percent = parseInt($("#mortgage-interest").val().replace(/ /g, ""));
+			if (isNaN(percent) || percent < 0) {
+				$("#mortgage-interest").val("1");
+			} else if (percent > 100) {
+				$("#mortgage-interest").val("100");
+			}
+			calculateMortgage();
+		}
+
+		function mortgageTermChanged() {
+			calculateMortgage();
+		}
+
+		function mortgageTypeChanged() {
+			calculateMortgage();
+		}
+
+		function calculateMortgage() {
+			var sum = parseInt($("#mortgage-sum").val().replace(/ /g, ""));
+			var dpValue = parseInt($("#mortgage-downpayment-value").val().replace(/ /g, ""));
+			var interestPerYear = parseFloat($("#mortgage-interest").val()) / 100;
+			var termInMonths = parseInt($("#mortgage-term").val() * 12);
+			var type = 'a'; 
+
+			var interestPerMonth = interestPerYear / 12;
+
+			var value = 0;
+
+			if (type === 'a') {
+				value = Math.max(0, Math.round((sum - dpValue) * (interestPerMonth / (1 - Math.pow(1 + interestPerMonth, - termInMonths)))));
+				$("#mortgage-result-circle").removeClass("diff").addClass("ann");
+			} else if (type === "d") {
+				var constPart = Math.round(sum / termInMonths);
+				var varPart = Math.round(constPart + sum * interestPerMonth);
+				value = "от " + constPart + " ₽<br />до " + varPart;
+				$("#mortgage-result-circle").removeClass("ann").addClass("diff");
+			}
+
+			if (!value) {
+				$("#mortgage-result-value").val("-");
+			} else {
+				$("#mortgage-result-value").html(value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "&thinsp;"));
+			}
+		}
+	</script>
+	
+ </body>
+</html>

@@ -1,0 +1,109 @@
+.amount {
+    font-size: 2rem;
+    font-weight: bolder;
+    color: #A80C07;
+}
+
+
+.rouble .input-group-text {
+    background-color: transparent;
+    border: 1px solid #ced4da;
+    border-top-right-radius: .25rem !important;
+    border-left: 0;
+    border-bottom-right-radius: 0.25rem !important;
+}
+
+.rouble .form-control {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    border-right: 0;
+}
+
+
+input.rouble:after {
+	display: block;
+	content:'₽';
+	width:15px;
+	height:15px;
+	
+}
+
+.interest input{
+    background: transparent;
+    border: 0;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bolder;
+    outline: none;
+    width: 70px;
+}
+
+.interest span {
+    font-size: 2.5rem;
+    font-weight: bolder;
+}
+
+.irs--flat .irs-min, .irs--flat .irs-max {
+    padding: 1px 1px;
+    color: #999;
+    font-size: 1rem;
+    background-color: transparent;
+    border-radius: 0;
+}
+
+.irs-from, .irs-to, .irs-single {
+    position: absolute;
+    display: block;
+    top: 115%;
+    z-index: 999;
+    left: 0;
+    cursor: default;
+    white-space: nowrap;
+}
+
+.irs--flat .irs-from, .irs--flat .irs-to, .irs--flat .irs-single {
+    color: white;
+    font-size: 1rem;
+    line-height: 1.9;
+    text-shadow: none;
+    padding: 1px;
+    background-color: #ed5565;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+
+.irs--flat .irs-from:before, .irs--flat .irs-to:before, .irs--flat .irs-single:before {
+    display: none;
+}
+
+.irs--flat .irs-bar, .irs--flat .irs-handle>i:first-child, .irs--flat .irs-from, .irs--flat .irs-to, .irs--flat .irs-single {
+    background-color: #a80c07;
+}
+
+.irs--flat .irs-from:before, .irs--flat .irs-to:before, .irs--flat .irs-single:before {    
+border-top-color: #a80c07;
+}
+.irs--flat .irs-grid-pol {
+    background-color: transparent;
+}
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575px) { 
+
+ }
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767px) { 
+
+  
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991px) {  }
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199px) {  }
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { }
